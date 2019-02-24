@@ -69,16 +69,11 @@
         return $filesToExclude;
     }
 
-    function removePathInFileName($file, $path) {
-        return str_replace($path . "/", "", $file);
-    }
-
-    function getFilesFromDirectory($nameDirectory) {
-        $files = str_replace(PATH_TO_ROOT_FOLDER, "", array_filter(glob(PATH_TO_ROOT_FOLDER . $nameDirectory . '/*')));
+    function getFilesFromDirectory($currentDirectory, $targetDirectory) {
+        $files = str_replace(PATH_TO_ROOT_FOLDER . $targetDirectory . "/", "", array_filter(glob(PATH_TO_ROOT_FOLDER . $targetDirectory . '/*')));
         $notExcludedFiles = [];
         $excludedFiles = getExcludedFiles();
         foreach($files as $file) {
-            $file = removePathInFileName($file, $nameDirectory);
             if(!in_array($file, $excludedFiles))
                 $notExcludedFiles[] = $file;
         }
@@ -89,11 +84,11 @@
         return in_array($nameFile, $foldersToExclude);
     }
 
-    function getFormatedContentFromDirectory($nameDirectory) {
-        $files = getFilesFromDirectory($nameDirectory);
+    function getFormatedContentFromDirectory($currentDirectory, $targetDirectory) {
+        $files = getFilesFromDirectory($currentDirectory, $targetDirectory);
         $formatedContent = [];
         foreach($files as $file) {
-            //$file = removePathInFileName($file, $nameDirectory);
+            $file = removePathInFileName($file, $targetDirectory);
             $formatedContent[] = [
                 "name" => $file,
                 "type" => getTypeFile($file),
@@ -113,25 +108,21 @@
             if(isset($_GET['directory'])) {
 
                 $directory = $_GET['directory'];
+                $currentDirectory = $_GET['currentDirectory'];
 
                 if($query == "getFilesFromDirectory") {
                     if(DEBUG)
-                        var_dump(getFilesFromDirectory($_GET['directory']));
+                        var_dump(getFilesFromDirectory($currentDirectory, $directory));
                     else
-                        echo(json_encode(getFilesFromDirectory($_GET['directory'])));
+                        echo(json_encode(getFilesFromDirectory($currentDirectory, $directory)));
                 }
                     
                 else if($query == "getFormatedContentFromDirectory") {
                     if(DEBUG)
-                        var_dump(getFormatedContentFromDirectory($_GET['directory']));
+                        var_dump(getFormatedContentFromDirectory($currentDirectory, $directory));
                     else
-                    echo(json_encode(getFormatedContentFromDirectory($_GET['directory'])));
+                    echo(json_encode(getFormatedContentFromDirectory($currentDirectory, $directory)));
                 }
-            } else if($query == "getDiskSpace") {
-                if(DEBUG)
-                    var_dump(getDiskSpace());
-                else
-                echo(json_encode(getDiskSpace()));
             }
         }
     }

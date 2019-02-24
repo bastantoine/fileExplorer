@@ -41,7 +41,6 @@
             showFolder(currentFolder, ".");
 
             $(document).on('click', 'a', function() {
-                console.log($(this).data("target"));
                 showFolder(currentFolder, $(this).data("target"));
                 currentFolder = $(this).data("target");
             })
