@@ -88,7 +88,6 @@
         $files = getFilesFromDirectory($currentDirectory, $targetDirectory);
         $formatedContent = [];
         foreach($files as $file) {
-            $file = removePathInFileName($file, $targetDirectory);
             $formatedContent[] = [
                 "name" => $file,
                 "type" => getTypeFile($file),
@@ -105,23 +104,23 @@
 
             $query = $_GET['query'];
 
-            if(isset($_GET['directory'])) {
+            if(isset($_GET['targetDirectory'])) {
 
-                $directory = $_GET['directory'];
+                $targetDirectory = $_GET['targetDirectory'];
                 $currentDirectory = $_GET['currentDirectory'];
 
                 if($query == "getFilesFromDirectory") {
                     if(DEBUG)
-                        var_dump(getFilesFromDirectory($currentDirectory, $directory));
+                        var_dump(getFilesFromDirectory($currentDirectory, $targetDirectory));
                     else
-                        echo(json_encode(getFilesFromDirectory($currentDirectory, $directory)));
+                        echo(json_encode(getFilesFromDirectory($currentDirectory, $targetDirectory)));
                 }
                     
                 else if($query == "getFormatedContentFromDirectory") {
                     if(DEBUG)
-                        var_dump(getFormatedContentFromDirectory($currentDirectory, $directory));
+                        var_dump(getFormatedContentFromDirectory($currentDirectory, $targetDirectory));
                     else
-                    echo(json_encode(getFormatedContentFromDirectory($currentDirectory, $directory)));
+                    echo(json_encode(getFormatedContentFromDirectory($currentDirectory, $targetDirectory)));
                 }
             }
         }

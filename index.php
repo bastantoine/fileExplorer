@@ -13,10 +13,10 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script>
-        function showFiles(directory, files) {
+        function showFiles(curentDirectory, files) {
             var container = $("div.container");
             container.empty();
-            container.append("<a href=\"#\" data-target=\"" + encodeURI(directory + "/..") + "\"><div class=\"item\"><i class=\"fas fa-folder fa-4x\"></i><br/>Dossier parent</div></a>");
+            container.append("<a href=\"#\" data-target=\"" + encodeURI(curentDirectory + "/..") + "\"><div class=\"item\"><i class=\"fas fa-folder fa-4x\"></i><br/>Dossier parent</div></a>");
             files.forEach(function(element) {
                 if(element.type == "file") {
                     container.append("<a href=\"" +  element.name + "\"><div class=\"item\"><i class=\"" + element.classIcon + " fa-4x\"></i><br/>" + element.name + "</div></a>");
@@ -29,7 +29,7 @@
         function showFolder(currentDirectory, targetDirectory) {
             $.ajax({
                 url: "api.php",
-                data: { query: "getFormatedContentFromDirectory", currentDirectory: currentDirectory, directory: targetDirectory },
+                data: { query: "getFormatedContentFromDirectory", currentDirectory: currentDirectory, targetDirectory: targetDirectory },
                 success: function(data) {
                     showFiles(currentDirectory, data);
                 }
@@ -41,8 +41,8 @@
             showFolder(currentFolder, ".");
 
             $(document).on('click', 'a', function() {
-                showFolder(currentFolder, $(this).data("target"));
                 currentFolder = $(this).data("target");
+                showFolder(currentFolder, $(this).data("target"));
             })
 
         });
